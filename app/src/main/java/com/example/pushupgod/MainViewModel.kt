@@ -15,23 +15,23 @@ class MainViewModel(application: Application) : ViewModel() {
     val searchResults: MutableLiveData<List<PushupLog>>
 
     init {
-        val productDb = PushupLogDatabase.getInstance(application)
-        val productDao = productDb.productDao()
-        repository = LogRepository(productDao)
+        val logDb = PushupLogDatabase.getInstance(application)
+        val logDao = logDb.productDao()
+        repository = LogRepository(logDao)
 
         allLogs = repository.allLogs
         searchResults = repository.searchResults
     }
 
-    fun insertProduct(pushupLog: PushupLog) {
+    fun insertlog(pushupLog: PushupLog) {
         repository.insertLog(pushupLog)
     }
 
-    fun findProduct(name: String) {
+    fun findLog(name: String) {
         repository.findLog(name)
     }
 
-    fun deleteProduct(name: String) {
+    fun deleteLog(name: String) {
         repository.deleteLog(name)
     }
 }

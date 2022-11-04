@@ -10,12 +10,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -82,7 +80,7 @@ fun mainScreen(
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
-        dataEntry()
+        dataEntry(viewModel = viewModel)
 
         if (allLogs != null) {
             LazyColumn(
@@ -108,7 +106,7 @@ fun mainScreen(
 }
 
 @Composable
-fun dataEntry(){
+fun dataEntry(viewModel: MainViewModel){
     var date by remember { mutableStateOf("") }
     var numPushed by remember { mutableStateOf("") }
 
@@ -120,7 +118,12 @@ fun dataEntry(){
         numPushed = text
     }
 
-    Column(modifier = Modifier.fillMaxWidth()) {
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        
+        // Date Entry
         CustomTextField(
             title = "Date",
             textState = date,
@@ -128,12 +131,30 @@ fun dataEntry(){
             keyboardType = KeyboardType.Text
         )
 
+        // # Pushed Data Entry
         CustomTextField(
             title = "# Pushed",
             textState = numPushed,
             onTextChange = onNumPushedChange,
             keyboardType = KeyboardType.Number
         )
+        
+        // Submit Button
+        Button(
+            onClick = {
+                if(numPushed.isNotEmpty()){
+                    viewModel.insertlog(
+                        PushupLog(
+                            date,
+                            numPushed.toInt()
+                        )
+                    )
+                }
+            }
+        ) {
+            Text(text = "Enter Data")
+        }
+        
     }
 }
 
