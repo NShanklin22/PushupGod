@@ -1,12 +1,9 @@
-package com.example.pushupgods
+package com.example.pushupgod.database
 
 import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.pushupgod.LogRepository
-import com.example.pushupgod.PushupLogDatabase
-import com.example.roomdatabase.PushupLog
 
 class MainViewModel(application: Application) : ViewModel() {
 

@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
-import com.example.roomdatabase.PushupLog
+import com.example.pushupgod.database.PushupLog
 
 @Dao
 interface PushupLogDao {
