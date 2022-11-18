@@ -15,6 +15,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -26,19 +27,26 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 import com.example.pushupgod.ui.theme.PushupGodTheme
 import com.example.pushupgod.database.MainViewModel
 import com.example.pushupgod.database.PushupLog
 import com.example.pushupgod.ui.appbar.AppTopBar
+import com.example.pushupgod.ui.appbar.NavRoutes
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-
             PushupGodTheme {
-
                 val systemUiController = rememberSystemUiController()
                 SideEffect {
                     systemUiController.setStatusBarColor(
@@ -46,7 +54,6 @@ class MainActivity : ComponentActivity() {
                         darkIcons = false
                     )
                 }
-
                 // Surface for the entire screen
                 Surface(
                     modifier = Modifier.fillMaxSize(),
@@ -76,8 +83,10 @@ class MainActivity : ComponentActivity() {
                                 )
                                 // Call screen setup and pass view model
                                 screenSetup(viewModel = viewModel)
-
                             }
+                        }
+                        Row() {
+                            
                         }
                     }
                 }
@@ -87,12 +96,33 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
+fun MainScreen(){
+    val NavController = rememberNavController()
+}
+
+@Composable
+fun NavigationHost(navController: NavHostController){
+    NavHost(
+        navController = navController,
+        startDestination = NavRoutes.Home.route,
+    ){
+        composable(NavRoutes.Home.route){
+            com.example.pushupgod.ui.screens.MainScreen()
+        }
+    }
+}
+
+
+@Composable
 fun screenSetup(viewModel: MainViewModel){
 
     val allLogs by viewModel.allLogs.observeAsState(listOf())
     val searchResults by viewModel.searchResults.observeAsState(listOf())
 
-    mainScreen(allLogs = allLogs, viewModel = viewModel)
+    Scaffold(modifier = Modifier.fillMaxSize()) {
+        mainScreen(allLogs = allLogs, viewModel = viewModel)
+
+    }
 }
 
 @Composable
@@ -127,6 +157,36 @@ fun mainScreen(
         }
     }
 }
+
+@Composable
+fun BottomNavigationBar(navController: NavHostController){
+    BottomNavigation {
+        val backStackEntry by navController.currentBackStackEntryAsState()
+        val currentRoute = backStackEntry?.destination?.route
+
+        NavBarItems.BarItems.forEach{ navItem ->
+            BottomNavigationItem(
+                selected = currentRoute == navItem.route,
+                onClick = {
+                          navController.navigate(navItem.route){
+                              popUpTo(navController.graph.findStartDestination().id){
+                                  saveState = true
+                              }
+                              launchSingleTop = true
+                              restoreState = true
+                          }
+                },
+                icon = {
+                    Icon(imageVector = navItem.image, contentDescription = navItem.title)
+                },
+                label = {
+                    Text(text = navItem.title)
+                },
+            )
+        }
+    }
+}
+
 
 @Composable
 fun dataEntry(viewModel: MainViewModel){
