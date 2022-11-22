@@ -15,7 +15,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun AppTopBar(
+fun TopNavigationBar(
     onAddClicked: () -> Unit
 ){
     TopAppBar(
@@ -53,5 +53,5 @@ fun AppBarActions(
 @Composable
 @Preview
 fun previewAppTopBar(){
-    AppTopBar(onAddClicked = {})
+    TopNavigationBar(onAddClicked = {})
 }
