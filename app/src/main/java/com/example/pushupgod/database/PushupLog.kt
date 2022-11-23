@@ -1,4 +1,4 @@
-package com.example.roomdatabase
+package com.example.pushupgod.database
 
 import androidx.annotation.NonNull
 import androidx.room.ColumnInfo

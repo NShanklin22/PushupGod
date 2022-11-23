@@ -1,11 +1,9 @@
-package com.example.pushupgod
+package com.example.pushupgod.database
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.roomdatabase.PushupLog
+import com.example.pushupgod.PushupLogDao
 import kotlinx.coroutines.*
-import kotlin.math.log
 
 class LogRepository(private val logDao: PushupLogDao) {
 
