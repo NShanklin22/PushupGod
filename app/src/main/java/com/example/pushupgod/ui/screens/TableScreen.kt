@@ -19,16 +19,18 @@ import androidx.compose.ui.unit.sp
 import com.example.pushupgod.database.MainViewModel
 import com.example.pushupgod.database.PushupLog
 
-
 @Composable
 fun TableScreen(
     allLogs: List<PushupLog>,
     viewModel: MainViewModel
 ){
+    // All items placed inside of a column
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
+        // All logs based from main activity
         if (allLogs != null) {
+            // Lazy column will display all the of the entries
             LazyColumn(
                 Modifier
                     .fillMaxWidth()
@@ -36,6 +38,7 @@ fun TableScreen(
             ) {
                 val list = allLogs
 
+                // First item is the Title Row followed by "items" which is based a list
                 item {
                     TitleRow(head1 = "ID", head2 = "Date", head3 = "# Pushed")
                 }
@@ -51,6 +54,32 @@ fun TableScreen(
     }
 }
 
+// Title Row for top of data table
+@Composable
+fun TitleRow(head1: String, head2: String, head3: String) {
+    Row(
+        modifier = Modifier
+            .background(Color.Red)
+            .fillMaxWidth()
+            .padding(5.dp)
+    ) {
+        Text(
+            head1,
+            modifier = Modifier
+                .weight(0.1f),
+            textAlign = TextAlign.Center,
+            color = Color.White
+        )
+        Text(
+            head3,
+            modifier = Modifier.weight(0.4f),
+            textAlign = TextAlign.Center,
+            color = Color.White
+        )
+    }
+}
+
+// Log Row to display each data entry
 @Composable
 fun logRow(id:Int,date:String,numPushed:Int){
     Row(
@@ -67,30 +96,6 @@ fun logRow(id:Int,date:String,numPushed:Int){
             numPushed.toString(),
             modifier = Modifier.weight(0.4f),
             textAlign = TextAlign.Center
-        )
-    }
-}
-
-@Composable
-fun TitleRow(head1: String, head2: String, head3: String) {
-    Row(
-        modifier = Modifier
-            .background(Color.Red)
-            .fillMaxWidth()
-            .padding(5.dp)
-    ) {
-        Text(
-            head2,
-            modifier = Modifier
-                .weight(0.1f),
-            textAlign = TextAlign.Center,
-            color = Color.White
-        )
-        Text(
-            head3,
-            modifier = Modifier.weight(0.4f),
-            textAlign = TextAlign.Center,
-            color = Color.White
         )
     }
 }

@@ -16,9 +16,13 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.pushupgod.database.MainViewModel
 import com.example.pushupgod.database.PushupLog
+import java.text.SimpleDateFormat
+import java.util.*
 
+// Primary composable called by MainActivity
 @Composable
 fun NewEntry(viewModel: MainViewModel){
     Column(
@@ -28,11 +32,12 @@ fun NewEntry(viewModel: MainViewModel){
     }
 }
 
-
-
+// Composable which handles gathering and submission of data
 @Composable
 fun dataEntry(viewModel: MainViewModel){
-    var date by remember { mutableStateOf("") }
+    val sdf = SimpleDateFormat("MM/dd/yyyy", Locale.US)
+    val time: String = sdf.format(Date())
+    var date by remember { mutableStateOf(sdf.format(Date()).toString()) }
     var numPushed by remember { mutableStateOf("") }
 
     val onDateChange = { text : String ->
@@ -48,7 +53,15 @@ fun dataEntry(viewModel: MainViewModel){
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        // # Pushed Data Entry
+        // Data entry date
+        CustomTextField(
+            title = "Date",
+            textState = date,
+            onTextChange = onDateChange,
+            keyboardType = KeyboardType.Text,
+        )
+
+        // Data Entry # Pushed
         CustomTextField(
             title = "# Pushed",
             textState = numPushed,
@@ -63,14 +76,19 @@ fun dataEntry(viewModel: MainViewModel){
                 contentColor = Color.White
             ) ,
             onClick = {
+                // First check that the
                 if(numPushed.isNotEmpty()){
+                    // Insert new entry to the table
                     viewModel.insertlog(
                         PushupLog(
                             date,
                             numPushed.toInt()
                         )
                     )
+                    // TODO: Add logic to: Clear text fields
+
                 }
+                // TODO: Add an else case for no data entered
             }
         ) {
             Text(text = "Enter Data")
@@ -109,4 +127,5 @@ fun CustomTextField(
 @Preview
 @Composable
 fun PreviewNewEntry(){
+    NewEntry(viewModel = viewModel())
 }

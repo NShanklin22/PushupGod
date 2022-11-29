@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -13,12 +14,21 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavHostController
+import com.example.pushupgod.NavBarItems
 
 @Composable
 fun TopNavigationBar(
-    onAddClicked: () -> Unit
+    navController: NavHostController
 ){
     TopAppBar(
+        navigationIcon = {
+            Icon(
+                imageVector = Icons.Filled.ArrowBack,
+                contentDescription = "Go back"
+            )
+        },
         title = {
             Text(
                 text = "Pushup GOD",
@@ -28,7 +38,11 @@ fun TopNavigationBar(
         },
         actions = {
             AppBarActions(
-                onAddClicked = onAddClicked
+                {
+                    navController.navigate(NavRoutes.NewEntry.route){
+
+                    }
+                }
             )
         },
         backgroundColor = Color.Red
@@ -53,5 +67,4 @@ fun AppBarActions(
 @Composable
 @Preview
 fun previewAppTopBar(){
-    TopNavigationBar(onAddClicked = {})
 }
