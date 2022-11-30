@@ -14,8 +14,10 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.pushupgod.database.MainViewModel
 import com.example.pushupgod.database.PushupLog
 
@@ -28,6 +30,8 @@ fun TableScreen(
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
+        // Adding a data selector to the top of the table
+        DataRangeSelector(viewModel = viewModel)
         // All logs based from main activity
         if (allLogs != null) {
             // Lazy column will display all the of the entries
@@ -40,7 +44,7 @@ fun TableScreen(
 
                 // First item is the Title Row followed by "items" which is based a list
                 item {
-                    TitleRow(head1 = "ID", head2 = "Date", head3 = "# Pushed")
+                    TitleRow(head1 = "Entry #", head2 = "Date", head3 = "# Pushed")
                 }
 
                 items(list) { log ->
@@ -52,6 +56,48 @@ fun TableScreen(
             }
         }
     }
+}
+
+// Allows selection between daily and weekly data
+@Composable
+fun DataRangeSelector(viewModel: MainViewModel){
+    // Get the daily and weekly selected states from viewModel
+    var dailySelected = viewModel.dailySelected
+    // Set the button color based on the daily and weekly selected
+    val DailyBackgroundColor = if(dailySelected) Color.White else Color.Red
+    val DailyTextColor = if(dailySelected) Color.Red else Color.White
+    val WeeklyBackgroundColor = if(dailySelected) Color.Red else Color.White
+    val WeeklyTextColor = if(dailySelected) Color.White else Color.Red
+
+    // Components will sit inside of a row
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.Center
+    ){
+        Button(
+            onClick = {
+                viewModel.dailySelected = true
+            },
+            colors = ButtonDefaults.buttonColors(
+                backgroundColor = DailyBackgroundColor,
+                contentColor = DailyTextColor
+            )
+        ){
+            Text("Daily")
+        }
+        Button(
+            onClick = {
+                viewModel.dailySelected = false
+            },
+            colors = ButtonDefaults.buttonColors(
+                backgroundColor = WeeklyBackgroundColor,
+                contentColor = WeeklyTextColor
+            )
+        ){
+            Text("Weekly")
+        }
+    }
+
 }
 
 // Title Row for top of data table
