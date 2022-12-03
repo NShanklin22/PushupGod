@@ -4,40 +4,23 @@ import android.app.Application
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
-import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.pushupgod.ui.theme.PushupGodTheme
 import com.example.pushupgod.database.MainViewModel
-import com.example.pushupgod.database.PushupLog
 import com.example.pushupgod.ui.appbar.BottomNavigationBar
 import com.example.pushupgod.ui.appbar.NavRoutes
 import com.example.pushupgod.ui.appbar.TopNavigationBar
@@ -64,7 +47,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colors.background
                 ) {
                     // Row that holds the main screen
-                    Row() {
+                    Row{
                         //TODO: Write out what this is used for
                         val owner = LocalViewModelStoreOwner.current
 
@@ -91,19 +74,18 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun ScreenSetup(viewModel: MainViewModel){
 
-    val NavController = rememberNavController()
+    val navController = rememberNavController()
 
     Scaffold(
-        topBar = { TopNavigationBar(onAddClicked = {}) },
-        content = { NavigationHost(navController = NavController, viewModel)},
-        bottomBar = { BottomNavigationBar(navController = NavController) }
+        topBar = { TopNavigationBar(navController = navController) },
+        content = { NavigationHost(navController = navController, viewModel)},
+        bottomBar = { BottomNavigationBar(navController = navController) }
     )
 }
 
 @Composable
 fun NavigationHost(navController: NavHostController, viewModel: MainViewModel){
     val allLogs by viewModel.allLogs.observeAsState(listOf())
-    val searchResults by viewModel.searchResults.observeAsState(listOf())
 
     NavHost(
         navController = navController,
@@ -121,7 +103,7 @@ fun NavigationHost(navController: NavHostController, viewModel: MainViewModel){
     }
 }
 
-
+@Suppress("UNCHECKED_CAST")
 class MainViewModelFactory(val application: Application):
         ViewModelProvider.Factory{
             override fun <T : ViewModel> create (modelClass: Class<T>): T {
