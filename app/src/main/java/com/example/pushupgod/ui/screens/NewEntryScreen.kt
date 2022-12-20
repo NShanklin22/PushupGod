@@ -85,8 +85,8 @@ fun dataEntry(viewModel: MainViewModel){
                             numPushed.toInt()
                         )
                     )
-                    // TODO: Add logic to: Clear text fields
-
+                    // Clear num pushed field
+                    numPushed = ""
                 }
                 // TODO: Add an else case for no data entered
             }

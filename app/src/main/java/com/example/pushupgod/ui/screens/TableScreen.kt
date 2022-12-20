@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -20,6 +21,8 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.pushupgod.database.MainViewModel
 import com.example.pushupgod.database.PushupLog
+import java.text.SimpleDateFormat
+import java.util.*
 
 @Composable
 fun TableScreen(
@@ -30,6 +33,13 @@ fun TableScreen(
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
+        // Set todays date as a string
+        val todayDate = SimpleDateFormat("MM/dd/yyyy", Locale.US).format(Date()).toString()
+        viewModel.findLog(todayDate)
+        val selectedLogs by viewModel.selectedLogs.observeAsState(listOf())
+        val allLogs by viewModel.allLogs.observeAsState(listOf())
+        var head1 = if(viewModel.dailySelected) "Entry #" else "Date"
+
         // Adding a data selector to the top of the table
         DataRangeSelector(viewModel = viewModel)
         // All logs based from main activity
@@ -40,11 +50,12 @@ fun TableScreen(
                     .fillMaxWidth()
                     .padding(10.dp),
             ) {
-                val list = allLogs
+                // list stores the current list of logs to be displayed
+                val list = if (viewModel.dailySelected) selectedLogs else allLogs
 
                 // First item is the Title Row followed by "items" which is based a list
                 item {
-                    TitleRow(head1 = "Entry #", head2 = "Date", head3 = "# Pushed")
+                    TitleRow(head1 = head1, head2 = "Date", head3 = "# Pushed")
                 }
 
                 items(list) { log ->
@@ -68,15 +79,19 @@ fun DataRangeSelector(viewModel: MainViewModel){
     val DailyTextColor = if(dailySelected) Color.Red else Color.White
     val WeeklyBackgroundColor = if(dailySelected) Color.Red else Color.White
     val WeeklyTextColor = if(dailySelected) Color.White else Color.Red
+    val todayDate = SimpleDateFormat("MM/dd/yyyy", Locale.US).format(Date()).toString()
 
     // Components will sit inside of a row
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.Center
     ){
+        // Daily data button
         Button(
             onClick = {
+                // Change the value of daily selected
                 viewModel.dailySelected = true
+                viewModel.findLog(todayDate)
             },
             colors = ButtonDefaults.buttonColors(
                 backgroundColor = DailyBackgroundColor,
@@ -85,9 +100,13 @@ fun DataRangeSelector(viewModel: MainViewModel){
         ){
             Text("Daily")
         }
+
+        // Weekly data button
         Button(
             onClick = {
+                // Change the value of daily selected
                 viewModel.dailySelected = false
+
             },
             colors = ButtonDefaults.buttonColors(
                 backgroundColor = WeeklyBackgroundColor,

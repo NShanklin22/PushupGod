@@ -7,28 +7,34 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import java.text.SimpleDateFormat
+import java.util.*
 
 class MainViewModel(application: Application) : ViewModel() {
 
+    // allLogs provides all pushup logs as a List of PushupLog Objects
     val allLogs: LiveData<List<PushupLog>>
+    // repository is an instance of class LogRepository in system tree, hold methods for accessing data
     private val repository: LogRepository
-    val searchResults: MutableLiveData<List<PushupLog>>
+    // search results is reutrned by the repository
+    val selectedLogs: MutableLiveData<List<PushupLog>>
     var dailySelected by mutableStateOf(true)
+
 
     init {
         val logDb = PushupLogDatabase.getInstance(application)
         val logDao = logDb.productDao()
         repository = LogRepository(logDao)
         allLogs = repository.allLogs
-        searchResults = repository.searchResults
+        selectedLogs = repository.selectedLogs
     }
 
     fun insertlog(pushupLog: PushupLog) {
         repository.insertLog(pushupLog)
     }
 
-    fun findLog(name: String) {
-        repository.findLog(name)
+    fun findLog(SelectedDateRange: String) {
+        repository.findLog(SelectedDateRange)
     }
 
     fun deleteLog(name: String) {

@@ -8,7 +8,7 @@ import kotlinx.coroutines.*
 class LogRepository(private val logDao: PushupLogDao) {
 
     val allLogs: LiveData<List<PushupLog>> = logDao.getAllLogs()
-    val searchResults = MutableLiveData<List<PushupLog>>()
+    val selectedLogs = MutableLiveData<List<PushupLog>>()
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
 
     fun insertLog(newLog: PushupLog) {
@@ -25,7 +25,7 @@ class LogRepository(private val logDao: PushupLogDao) {
 
     fun findLog(name: String) {
         coroutineScope.launch(Dispatchers.Main) {
-            searchResults.value = asyncFind(name).await()
+            selectedLogs.value = asyncFind(name).await()
         }
     }
 
