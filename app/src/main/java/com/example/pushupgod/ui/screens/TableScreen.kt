@@ -60,7 +60,7 @@ fun TableScreen(
 
                 items(list) { log ->
                     logRow(
-                        id = log.id, date = log.date,
+                        key = log.date,
                         numPushed = log.numPushed
                     )
                 }
@@ -82,38 +82,56 @@ fun DataRangeSelector(viewModel: MainViewModel){
     val todayDate = SimpleDateFormat("MM/dd/yyyy", Locale.US).format(Date()).toString()
 
     // Components will sit inside of a row
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.Center
-    ){
-        // Daily data button
-        Button(
-            onClick = {
-                // Change the value of daily selected
-                viewModel.dailySelected = true
-                viewModel.findLog(todayDate)
-            },
-            colors = ButtonDefaults.buttonColors(
-                backgroundColor = DailyBackgroundColor,
-                contentColor = DailyTextColor
-            )
+    Column() {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center
         ){
-            Text("Daily")
+            // Daily data button
+            Button(
+                onClick = {
+                    // Change the value of daily selected
+                    viewModel.dailySelected = true
+                    viewModel.findLog(todayDate)
+                },
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = DailyBackgroundColor,
+                    contentColor = DailyTextColor
+                )
+            ){
+                Text("Daily")
+            }
+
+            // Weekly data button
+            Button(
+                onClick = {
+                    // Change the value of daily selected
+                    viewModel.dailySelected = false
+
+                },
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = WeeklyBackgroundColor,
+                    contentColor = WeeklyTextColor
+                )
+            ){
+                Text("Weekly")
+            }
         }
-
-        // Weekly data button
-        Button(
-            onClick = {
-                // Change the value of daily selected
-                viewModel.dailySelected = false
-
-            },
-            colors = ButtonDefaults.buttonColors(
-                backgroundColor = WeeklyBackgroundColor,
-                contentColor = WeeklyTextColor
-            )
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(5.dp).background(Color.Red)
         ){
-            Text("Weekly")
+            Text(
+                modifier = Modifier.padding(vertical = 10.dp, horizontal = 10.dp),
+                text =
+                if(dailySelected){
+                    "Daily Entries"
+                }else{
+                    "Weekly Entries"
+                },
+                style = TextStyle(
+                    color = Color.White
+                )
+            )
         }
     }
 
@@ -131,13 +149,13 @@ fun TitleRow(head1: String, head2: String, head3: String) {
         Text(
             head1,
             modifier = Modifier
-                .weight(0.1f),
+                .weight(0.2f),
             textAlign = TextAlign.Center,
             color = Color.White
         )
         Text(
             head3,
-            modifier = Modifier.weight(0.4f),
+            modifier = Modifier.weight(0.2f),
             textAlign = TextAlign.Center,
             color = Color.White
         )
@@ -146,20 +164,20 @@ fun TitleRow(head1: String, head2: String, head3: String) {
 
 // Log Row to display each data entry
 @Composable
-fun logRow(id:Int,date:String,numPushed:Int){
+fun logRow(key:String,numPushed:Int){
     Row(
         modifier = Modifier.fillMaxWidth(),
-
-        ){
+    ){
+        // First text is the key which will change depending on if daily or weekly is selected
         Text(
-            id.toString(),
+            key,
             modifier = Modifier
-                .weight(0.1f),
+                .weight(0.2f),
             textAlign = TextAlign.Center
         )
         Text(
             numPushed.toString(),
-            modifier = Modifier.weight(0.4f),
+            modifier = Modifier.weight(0.2f),
             textAlign = TextAlign.Center
         )
     }

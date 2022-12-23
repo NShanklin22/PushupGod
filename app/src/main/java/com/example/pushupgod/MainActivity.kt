@@ -1,7 +1,11 @@
 package com.example.pushupgod
 
+import android.app.Activity
 import android.app.Application
+import android.content.ContentValues
 import android.os.Bundle
+import android.util.Log
+import android.view.View
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
@@ -11,6 +15,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
@@ -25,7 +30,7 @@ import com.example.pushupgod.ui.appbar.BottomNavigationBar
 import com.example.pushupgod.ui.appbar.NavRoutes
 import com.example.pushupgod.ui.appbar.TopNavigationBar
 import com.example.pushupgod.ui.screens.GraphScreen
-import com.example.pushupgod.ui.screens.NewEntry
+import com.example.pushupgod.ui.screens.NewEntryDialog
 import com.example.pushupgod.ui.screens.TableScreen
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
@@ -75,9 +80,17 @@ class MainActivity : ComponentActivity() {
 fun ScreenSetup(viewModel: MainViewModel){
 
     val navController = rememberNavController()
+    if(viewModel.NewEntrySelected){
+        Log.e(ContentValues.TAG, "Something should have popped up here!")
+        NewEntryDialog(
+            viewModel = viewModel,
+            onConfirm = {},
+            onDismiss = {}
+        )
+    }
 
     Scaffold(
-        topBar = { TopNavigationBar(navController = navController) },
+        topBar = { TopNavigationBar(navController = navController, viewModel) },
         content = { NavigationHost(navController = navController, viewModel)},
         bottomBar = { BottomNavigationBar(navController = navController) }
     )
@@ -96,9 +109,6 @@ fun NavigationHost(navController: NavHostController, viewModel: MainViewModel){
         }
         composable(NavRoutes.Graph.route){
             GraphScreen()
-        }
-        composable(NavRoutes.NewEntry.route){
-            NewEntry(viewModel = viewModel)
         }
     }
 }

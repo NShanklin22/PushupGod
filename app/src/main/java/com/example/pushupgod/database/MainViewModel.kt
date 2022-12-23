@@ -19,6 +19,8 @@ class MainViewModel(application: Application) : ViewModel() {
     // search results is reutrned by the repository
     val selectedLogs: MutableLiveData<List<PushupLog>>
     var dailySelected by mutableStateOf(true)
+    // Variable to note if in the new entry page
+    var NewEntrySelected by mutableStateOf(false)
 
 
     init {
@@ -27,6 +29,10 @@ class MainViewModel(application: Application) : ViewModel() {
         repository = LogRepository(logDao)
         allLogs = repository.allLogs
         selectedLogs = repository.selectedLogs
+    }
+
+    fun onDismissDialog(){
+
     }
 
     fun insertlog(pushupLog: PushupLog) {
