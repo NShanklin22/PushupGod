@@ -1,5 +1,6 @@
 package com.example.pushupgod.ui.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -8,6 +9,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -69,7 +71,7 @@ fun dataEntry(viewModel: MainViewModel, onConfirm: Unit){
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
+        val context = LocalContext.current
         // Data entry date
         CustomTextField(
             title = "Date",
@@ -97,7 +99,7 @@ fun dataEntry(viewModel: MainViewModel, onConfirm: Unit){
                     contentColor = Color.White
                 ) ,
                 onClick = {
-                    // First check that the
+                    // First check that the user has entered a value, if not display a toast
                     if(numPushed.isNotEmpty()){
                         // Insert new entry to the table
                         viewModel.insertlog(
@@ -109,6 +111,8 @@ fun dataEntry(viewModel: MainViewModel, onConfirm: Unit){
                         // Clear num pushed field
                         numPushed = ""
                         viewModel.NewEntrySelected = false
+                    }else{
+                        Toast.makeText(context,"Please entry a value", Toast.LENGTH_SHORT).show()
                     }
                     // TODO: Add an else case for no data entered
                 }

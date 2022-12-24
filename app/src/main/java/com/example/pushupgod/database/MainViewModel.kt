@@ -1,6 +1,7 @@
 package com.example.pushupgod.database
 
 import android.app.Application
+import android.text.BoringLayout
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -45,5 +46,9 @@ class MainViewModel(application: Application) : ViewModel() {
 
     fun deleteLog(name: String) {
         repository.deleteLog(name)
+    }
+
+    fun sortLogs(SortOrder: String){
+
     }
 }

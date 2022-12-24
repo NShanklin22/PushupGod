@@ -33,4 +33,10 @@ class LogRepository(private val logDao: PushupLogDao) {
         coroutineScope.async(Dispatchers.IO) {
             return@async logDao.findLog(name)
         }
+
+    fun SortLogs(SortOrder: String){
+        coroutineScope.launch(Dispatchers.IO) {
+            logDao.sortLogs()
+        }
+    }
 }

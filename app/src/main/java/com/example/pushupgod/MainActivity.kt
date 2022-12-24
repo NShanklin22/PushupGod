@@ -29,6 +29,7 @@ import com.example.pushupgod.database.MainViewModel
 import com.example.pushupgod.ui.appbar.BottomNavigationBar
 import com.example.pushupgod.ui.appbar.NavRoutes
 import com.example.pushupgod.ui.appbar.TopNavigationBar
+import com.example.pushupgod.ui.screens.AnimatedSplashScreen
 import com.example.pushupgod.ui.screens.GraphScreen
 import com.example.pushupgod.ui.screens.NewEntryDialog
 import com.example.pushupgod.ui.screens.TableScreen
@@ -102,8 +103,11 @@ fun NavigationHost(navController: NavHostController, viewModel: MainViewModel){
 
     NavHost(
         navController = navController,
-        startDestination = NavRoutes.Table.route,
+        startDestination = NavRoutes.Splash.route,
     ){
+        composable(NavRoutes.Splash.route){
+            AnimatedSplashScreen()
+        }
         composable(NavRoutes.Table.route){
             TableScreen(allLogs,viewModel)
         }

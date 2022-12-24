@@ -21,4 +21,6 @@ interface PushupLogDao {
     @Query("SELECT * FROM pushupLogs")
     fun getAllLogs(): LiveData<List<PushupLog>>
 
+    @Query("SELECT * FROM pushupLogs ORDER BY date")
+    fun sortLogs(): LiveData<List<PushupLog>>
 }

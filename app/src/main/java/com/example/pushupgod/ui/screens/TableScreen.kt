@@ -51,6 +51,13 @@ fun TableScreen(
                     .padding(10.dp),
             ) {
                 // list stores the current list of logs to be displayed
+                if(viewModel.dailySelected){
+                    val list = selectedLogs
+                    val key1 ="date"
+                }else{
+                    val list = allLogs
+                    val key1 = "id"
+                }
                 val list = if (viewModel.dailySelected) selectedLogs else allLogs
 
                 // First item is the Title Row followed by "items" which is based a list
@@ -60,7 +67,7 @@ fun TableScreen(
 
                 items(list) { log ->
                     logRow(
-                        key = log.date,
+                        key = if(viewModel.dailySelected){log.id.toString()}else{log.date},
                         numPushed = log.numPushed
                     )
                 }
@@ -118,7 +125,10 @@ fun DataRangeSelector(viewModel: MainViewModel){
             }
         }
         Row(
-            modifier = Modifier.fillMaxWidth().padding(5.dp).background(Color.Red)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(10.dp)
+                .background(Color.Red)
         ){
             Text(
                 modifier = Modifier.padding(vertical = 10.dp, horizontal = 10.dp),
