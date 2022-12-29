@@ -82,7 +82,6 @@ fun ScreenSetup(viewModel: MainViewModel){
 
     val navController = rememberNavController()
     if(viewModel.NewEntrySelected){
-        Log.e(ContentValues.TAG, "Something should have popped up here!")
         NewEntryDialog(
             viewModel = viewModel,
             onConfirm = {},
@@ -106,7 +105,7 @@ fun NavigationHost(navController: NavHostController, viewModel: MainViewModel){
         startDestination = NavRoutes.Splash.route,
     ){
         composable(NavRoutes.Splash.route){
-            AnimatedSplashScreen()
+            AnimatedSplashScreen(navController)
         }
         composable(NavRoutes.Table.route){
             TableScreen(allLogs,viewModel)

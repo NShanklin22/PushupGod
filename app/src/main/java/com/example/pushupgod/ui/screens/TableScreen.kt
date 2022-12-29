@@ -7,14 +7,12 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowForward
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -98,6 +96,10 @@ fun DataRangeSelector(viewModel: MainViewModel){
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center
         ){
+            Icon(
+                Icons.Default.ArrowBack,
+                contentDescription = "Go backwards in time"
+            )
             // Daily data button
             Button(
                 onClick = {
@@ -146,15 +148,6 @@ fun DataRangeSelector(viewModel: MainViewModel){
                     color = Color.White
                 )
             )
-        }
-        FloatingActionButton(
-            backgroundColor = Color.Red,
-            elevation = FloatingActionButtonDefaults.elevation(8.dp),
-            onClick = {
-                // Handle the FAB click event here
-            }
-        ) {
-            Icon(imageVector = Icons.Default.Add, contentDescription = "Add new enetry")
         }
     }
 
