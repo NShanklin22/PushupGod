@@ -37,22 +37,41 @@ fun TableScreen(
     ) {
         // Set todays date as a string
         val todayDate = SimpleDateFormat("MM/dd/yyyy", Locale.US).format(Date()).toString()
+
+        // Call the findLog function with todays date to get all logs from today
         viewModel.findLog(todayDate)
+
+        //TODO write what this variable is actually doing
         val selectedLogs by viewModel.selectedLogs.observeAsState(listOf())
+
+        // Define all logs TODO what is this being used for?
         val allLogs by viewModel.allLogs.observeAsState(listOf())
+
+        // Defines the table head depending on what day is selected
         var head1 = if(viewModel.dailySelected) "Entry #" else "Date"
 
         // Adding a data selector to the top of the table
         DataRangeSelector(viewModel = viewModel)
+
         // All logs based from main activity
         if (allLogs != null) {
-            // Lazy column will display all the of the entries
+
+            // Lazy column will display several entries and provide the scroll functionality
             LazyColumn(
                 Modifier
                     .fillMaxWidth()
                     .padding(10.dp),
             ) {
-                // list stores the current list of logs to be displayed
+
+
+
+
+                /////////////////////////////////////
+                /// MAJOR CONSTRUCTION AREA CLOSED///
+                /////////////////////////////////////
+                // list stores the current list o
+                // f logs to be displayed, will show the daily logs or all logs
+                // TODO this needs seriously revamped to select logs based on various dates
                 if(viewModel.dailySelected){
                     val list = selectedLogs
                     val key1 ="date"
@@ -60,14 +79,21 @@ fun TableScreen(
                     val list = allLogs
                     val key1 = "id"
                 }
+                /////////////////////////////////////
+                /// MAJOR CONSTRUCTION AREA CLOSED///
+                /////////////////////////////////////
+
                 val list = if (viewModel.dailySelected) selectedLogs else allLogs
+                val key1 = if (viewModel.dailySelected) "date" else "id"
 
                 // First item is the Title Row followed by "items" which is based a list
                 item {
                     TitleRow(head1 = head1, head2 = "Date", head3 = "# Pushed")
                 }
 
+                // The list of items follows the title row
                 items(list) { log ->
+                    // Log row is self defined composable function
                     logRow(
                         key = if(viewModel.dailySelected){log.id.toString()}else{log.date},
                         numPushed = log.numPushed
@@ -79,6 +105,7 @@ fun TableScreen(
 }
 
 // Allows selection between daily and weekly data
+// TODO: Revamp this area to allow for daily, weekly, and monthly range selections
 @Composable
 fun DataRangeSelector(viewModel: MainViewModel){
     // Get the daily and weekly selected states from viewModel
@@ -191,6 +218,8 @@ fun logRow(key:String,numPushed:Int){
                 .weight(0.2f),
             textAlign = TextAlign.Center
         )
+
+        // Number pushed
         Text(
             numPushed.toString(),
             modifier = Modifier.weight(0.2f),

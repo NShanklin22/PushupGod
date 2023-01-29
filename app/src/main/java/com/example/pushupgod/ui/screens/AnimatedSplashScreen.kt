@@ -53,6 +53,5 @@ fun Splash(alpha: Float){
         contentAlignment = Alignment.Center
 
     ){
-        Image(painter = painterResource(id = R.drawable.startscreen), contentDescription = "Start up image of swole god")
     }
 }
