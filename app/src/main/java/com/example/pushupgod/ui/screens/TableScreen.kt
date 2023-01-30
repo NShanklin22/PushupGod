@@ -40,6 +40,7 @@ import java.util.logging.Logger
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun TableScreen(
+    allLogs: List<PushupLog>,
     viewModel: MainViewModel
 ){
     // All items placed inside of a column
@@ -58,6 +59,7 @@ fun TableScreen(
 
 // Allows selection between daily and weekly data
 @RequiresApi(Build.VERSION_CODES.O)
+// TODO: Revamp this area to allow for daily, weekly, and monthly range selections
 @Composable
 fun DataRangeSelector(viewModel: MainViewModel){
 
@@ -153,9 +155,9 @@ fun DataRangeSelector(viewModel: MainViewModel){
                 modifier = Modifier.padding(vertical = 10.dp, horizontal = 10.dp),
                 text =
                 if(dailySelected){
-                    "Daily View ${activeDate}"
+                    "Daily Entries"
                 }else{
-                    "Weekly View | Week ${1} | ${GetDateAndTime(date = "nate")}"
+                    "Weekly Entries"
                 },
                 style = TextStyle(
                     color = Color.White
@@ -247,6 +249,8 @@ fun logRow(key:String,numPushed:Int){
                 .weight(0.2f),
             textAlign = TextAlign.Center
         )
+
+        // Number pushed
         Text(
             numPushed.toString(),
             modifier = Modifier.weight(0.2f),

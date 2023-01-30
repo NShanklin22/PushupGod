@@ -114,7 +114,6 @@ fun dataEntry(viewModel: MainViewModel, onConfirm: Unit){
                     }else{
                         Toast.makeText(context,"Please entry a value", Toast.LENGTH_SHORT).show()
                     }
-                    // TODO: Add an else case for no data entered
                 }
             ) {
                 Text(text = "Enter Data")

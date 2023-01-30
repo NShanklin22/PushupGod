@@ -41,7 +41,10 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            // The theme is defined inside of Theme.kt
             PushupGodTheme {
+                // In this section we are defining the system ui controller and using it to make the
+                // status bar (top most system bar) red instead of purple
                 val systemUiController = rememberSystemUiController()
                 SideEffect {
                     systemUiController.setStatusBarColor(
@@ -49,7 +52,7 @@ class MainActivity : ComponentActivity() {
                         darkIcons = false
                     )
                 }
-                // Surface for the entire screen
+                // Surface for the entire screen, everything else will sit on this surface
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
@@ -61,6 +64,7 @@ class MainActivity : ComponentActivity() {
 
                         // Get the viewmodel
                         owner?.let {
+                            // Define the view model which will hold the key data and functions used in the rest of the application
                             val viewModel: MainViewModel = viewModel(
                                 it,
                                 "MainViewModel",
@@ -83,6 +87,7 @@ class MainActivity : ComponentActivity() {
 fun ScreenSetup(viewModel: MainViewModel){
 
     val navController = rememberNavController()
+
     if(viewModel.NewEntrySelected){
         NewEntryDialog(
             viewModel = viewModel,
@@ -110,6 +115,10 @@ fun ScreenSetup(viewModel: MainViewModel){
 
 @Composable
 fun NavigationHost(navController: NavHostController, viewModel: MainViewModel){
+
+    // Define the allLogs to be used by the various screens
+    val allLogs by viewModel.allLogs.observeAsState(listOf())
+
     NavHost(
         navController = navController,
         startDestination = NavRoutes.Splash.route,
@@ -118,7 +127,7 @@ fun NavigationHost(navController: NavHostController, viewModel: MainViewModel){
             AnimatedSplashScreen(navController)
         }
         composable(NavRoutes.Table.route){
-            TableScreen(viewModel)
+            TableScreen(allLogs,viewModel)
         }
         composable(NavRoutes.Graph.route){
             GraphScreen()
