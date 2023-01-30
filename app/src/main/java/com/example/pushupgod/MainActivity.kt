@@ -10,6 +10,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
@@ -91,6 +93,16 @@ fun ScreenSetup(viewModel: MainViewModel){
 
     Scaffold(
         topBar = { TopNavigationBar(navController = navController, viewModel) },
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = {
+                    viewModel.NewEntrySelected = true
+                }
+            ) {
+                // Add an icon to the FAB using the Icon component
+                Icon(imageVector = Icons.Default.Add, contentDescription = "Add a new entry")
+            }
+        },
         content = { NavigationHost(navController = navController, viewModel)},
         bottomBar = { BottomNavigationBar(navController = navController) }
     )
@@ -98,8 +110,6 @@ fun ScreenSetup(viewModel: MainViewModel){
 
 @Composable
 fun NavigationHost(navController: NavHostController, viewModel: MainViewModel){
-    val allLogs by viewModel.allLogs.observeAsState(listOf())
-
     NavHost(
         navController = navController,
         startDestination = NavRoutes.Splash.route,
@@ -108,7 +118,7 @@ fun NavigationHost(navController: NavHostController, viewModel: MainViewModel){
             AnimatedSplashScreen(navController)
         }
         composable(NavRoutes.Table.route){
-            TableScreen(allLogs,viewModel)
+            TableScreen(viewModel)
         }
         composable(NavRoutes.Graph.route){
             GraphScreen()

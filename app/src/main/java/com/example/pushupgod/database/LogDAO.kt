@@ -1,6 +1,7 @@
 package com.example.pushupgod
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
@@ -21,6 +22,14 @@ interface PushupLogDao {
     @Query("SELECT * FROM pushupLogs")
     fun getAllLogs(): LiveData<List<PushupLog>>
 
-    @Query("SELECT * FROM pushupLogs ORDER BY date")
-    fun sortLogs(): LiveData<List<PushupLog>>
+    // The Query is what will be used to access the database
+    // the function name followed by : the data type returned
+    @Query("SELECT * FROM pushupLogs ORDER BY date DESC")
+    fun sortLogsByDateDesc(): List<PushupLog>
+
+    @Query("SELECT * FROM pushupLogs ORDER BY date ASC")
+    fun sortLogsByDateAsc(): List<PushupLog>
+
+    @Query("SELECT * FROM pushupLogs WHERE date BETWEEN :StartDate AND :EndDate")
+    fun getLogsBetweenDates(StartDate: String, EndDate: String): List<PushupLog>
 }

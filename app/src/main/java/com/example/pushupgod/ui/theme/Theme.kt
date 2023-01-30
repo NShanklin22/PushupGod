@@ -9,8 +9,8 @@ import androidx.compose.ui.graphics.Color
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 private val DarkColorPalette = darkColors(
-    primary = RedMain,
-    primaryVariant = RedMain,
+    primary = SynthwaveRed,
+    primaryVariant = SynthwaveYellow,
     secondary = RedMain
 )
 
