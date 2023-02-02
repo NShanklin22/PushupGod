@@ -88,7 +88,9 @@ fun DataRangeSelector(viewModel: MainViewModel){
 
         // First row has the daily/weekly entries selector
         Row(
-            modifier = Modifier.fillMaxWidth().padding(vertical = 15.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 15.dp),
             horizontalArrangement = Arrangement.SpaceEvenly,
         ){
 
@@ -148,16 +150,15 @@ fun DataRangeSelector(viewModel: MainViewModel){
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(10.dp)
                 .background(Color.Red)
         ){
             Text(
                 modifier = Modifier.padding(vertical = 10.dp, horizontal = 10.dp),
                 text =
                 if(dailySelected){
-                    "Daily Entries"
+                    "Daily Entries | 01/31/23"
                 }else{
-                    "Weekly Entries"
+                    "Weekly Entries | 01/22/23 - 01/29/23"
                 },
                 style = TextStyle(
                     color = Color.White
@@ -177,7 +178,9 @@ fun DataTable(viewModel: MainViewModel){
     var listLogs = viewModel.listedLogs.value
 
     // Set the table head depending on where daily values button is selected
-    var TableHead1 = if(viewModel.dailySelected) "Entry #" else "Date"
+    var TableHead1 = if(viewModel.dailySelected) "Time" else "Date"
+
+    TitleRow(head1 = TableHead1, head2 = "# Pushed")
 
     if (listLogs != null) {
             // Lazy column will display all the of the entries
@@ -188,7 +191,7 @@ fun DataTable(viewModel: MainViewModel){
             ) {
                 // First item is the Title Row followed by "items" which is based a list
                 item {
-                    TitleRow(head1 = TableHead1, head2 = "Date", head3 = "# Pushed")
+                    TitleRow(head1 = TableHead1, head2 = "# Pushed")
                 }
 
                 items(listLogs) { log ->
@@ -204,16 +207,18 @@ fun DataTable(viewModel: MainViewModel){
             }
     }
     else{
-        Text(
-            modifier = Modifier.padding(15.dp),
-            text = "No logs for date selected"
-        )
+        Column(modifier = Modifier.padding(5.dp)) {
+            Text(
+                modifier = Modifier.padding(15.dp),
+                text = "No logs for date selected"
+            )
+        }
     }
 }
 
 // Title Row for top of data table
 @Composable
-fun TitleRow(head1: String, head2: String, head3: String) {
+fun TitleRow(head1: String, head2: String) {
     Row(
         modifier = Modifier
             .background(Color.Red)
@@ -228,7 +233,7 @@ fun TitleRow(head1: String, head2: String, head3: String) {
             color = Color.White
         )
         Text(
-            head3,
+            head2,
             modifier = Modifier.weight(0.2f),
             textAlign = TextAlign.Center,
             color = Color.White

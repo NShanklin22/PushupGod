@@ -3,11 +3,13 @@ package com.example.pushupgod
 import android.app.Activity
 import android.app.Application
 import android.content.ContentValues
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -38,6 +40,7 @@ import com.example.pushupgod.ui.screens.TableScreen
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 class MainActivity : ComponentActivity() {
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -83,6 +86,7 @@ class MainActivity : ComponentActivity() {
 }
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ScreenSetup(viewModel: MainViewModel){
 
@@ -113,11 +117,12 @@ fun ScreenSetup(viewModel: MainViewModel){
     )
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun NavigationHost(navController: NavHostController, viewModel: MainViewModel){
 
     // Define the allLogs to be used by the various screens
-    val allLogs by viewModel.allLogs.observeAsState(listOf())
+    val allLogs by viewModel.listedLogs.observeAsState(listOf())
 
     NavHost(
         navController = navController,
@@ -138,6 +143,7 @@ fun NavigationHost(navController: NavHostController, viewModel: MainViewModel){
 @Suppress("UNCHECKED_CAST")
 class MainViewModelFactory(val application: Application):
         ViewModelProvider.Factory{
+            @RequiresApi(Build.VERSION_CODES.O)
             override fun <T : ViewModel> create (modelClass: Class<T>): T {
                 return MainViewModel(application) as T
             }

@@ -11,12 +11,17 @@ import com.example.pushupgod.ui.appbar.BarItem
 object NavBarItems {
     val BarItems = listOf(
         BarItem(
-            title = "Table",
+            title = "Overview",
+            image = Icons.Filled.Home,
+            route = "overview"
+        ),
+        BarItem(
+            title = "Table View",
             image = Icons.Filled.List,
             route = "table"
         ),
         BarItem(
-            title = "Graph",
+            title = "Graph View",
             image = Icons.Filled.KeyboardArrowUp,
             route = "graph"
         )

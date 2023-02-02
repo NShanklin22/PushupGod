@@ -21,15 +21,24 @@ class MainViewModel(application: Application) : ViewModel() {
 
     // repository is an instance of class LogRepository in system tree, hold methods for accessing data
     private val repository: LogRepository
+
+    // Variables that determine what range of data is being displayed
+    // Show entries from today
     var dailySelected by mutableStateOf(true)
+    // Show entries from this week
+    var weeklySelected by mutableStateOf(false  )
+    // Show entries from this month
+    var monthlySelected by mutableStateOf(false)
+
     // Variable to note if in the new entry page
     var NewEntrySelected by mutableStateOf(false)
 
     // Variable to store the active week
-    val dateFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy")
+    val dateFormatter = DateTimeFormatter.ofPattern("MM/dd/yy")
     val TodaysDate = LocalDate.now()
     var activeDay by mutableStateOf(TodaysDate)
-    var activeDayString by mutableStateOf(TodaysDate.format(dateFormatter))
+    var activeWeek by mutableStateOf(1)
+    var activeMonth by mutableStateOf(1)
 
     // listed logs are what are displayed on the main
     lateinit var listedLogs : MutableLiveData<List<PushupLog>>
