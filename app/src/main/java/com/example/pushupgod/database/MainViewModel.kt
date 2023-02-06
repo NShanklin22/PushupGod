@@ -26,7 +26,7 @@ class MainViewModel(application: Application) : ViewModel() {
     // Show entries from today
     var dailySelected by mutableStateOf(true)
     // Show entries from this week
-    var weeklySelected by mutableStateOf(false  )
+    var weeklySelected by mutableStateOf(false )
     // Show entries from this month
     var monthlySelected by mutableStateOf(false)
 
@@ -68,11 +68,31 @@ class MainViewModel(application: Application) : ViewModel() {
         repository.sortLogs()
     }
 
-    fun changeActiveDatae(direction: Int){
+    // Function with Increment/Decrement the active day (for daily view)
+    fun changeActiveDay(direction: Int){
         if(direction == 1){
             activeDay = activeDay.plusDays(1)
         }else{
             activeDay = activeDay.minusDays(1)
         }
     }
+
+    // Function with Increment/Decrement the active week (for weekly view)
+    fun changeActiveWeek(direction: Int){
+        if(direction == 1){
+
+        }else{
+
+        }
+    }
+
+    // Function with Increment/Decrement the active month (for monthly view)
+    fun changeActiveMonth(direction: Int){
+        if(direction == 1){
+
+        }else{
+
+        }
+    }
+
 }

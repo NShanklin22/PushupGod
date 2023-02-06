@@ -33,10 +33,7 @@ import com.example.pushupgod.database.MainViewModel
 import com.example.pushupgod.ui.appbar.BottomNavigationBar
 import com.example.pushupgod.ui.appbar.NavRoutes
 import com.example.pushupgod.ui.appbar.TopNavigationBar
-import com.example.pushupgod.ui.screens.AnimatedSplashScreen
-import com.example.pushupgod.ui.screens.GraphScreen
-import com.example.pushupgod.ui.screens.NewEntryDialog
-import com.example.pushupgod.ui.screens.TableScreen
+import com.example.pushupgod.ui.screens.*
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 class MainActivity : ComponentActivity() {
@@ -131,12 +128,20 @@ fun NavigationHost(navController: NavHostController, viewModel: MainViewModel){
         composable(NavRoutes.Splash.route){
             AnimatedSplashScreen(navController)
         }
+
+        composable(NavRoutes.Overview.route){
+            OverviewScreen()
+        }
+
         composable(NavRoutes.Table.route){
             TableScreen(allLogs,viewModel)
         }
+
         composable(NavRoutes.Graph.route){
             GraphScreen()
         }
+
+
     }
 }
 
