@@ -1,12 +1,8 @@
 package com.example.pushupgod
 
-import android.app.Activity
 import android.app.Application
-import android.content.ContentValues
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
-import android.view.View
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
@@ -19,7 +15,6 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalView
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
@@ -29,7 +24,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.pushupgod.ui.theme.PushupGodTheme
-import com.example.pushupgod.database.MainViewModel
+import com.example.pushupgod.database.LogViewModel
 import com.example.pushupgod.ui.appbar.BottomNavigationBar
 import com.example.pushupgod.ui.appbar.NavRoutes
 import com.example.pushupgod.ui.appbar.TopNavigationBar
@@ -65,7 +60,7 @@ class MainActivity : ComponentActivity() {
                         // Get the viewmodel
                         owner?.let {
                             // Define the view model which will hold the key data and functions used in the rest of the application
-                            val viewModel: MainViewModel = viewModel(
+                            val viewModel: LogViewModel = viewModel(
                                 it,
                                 "MainViewModel",
                                 MainViewModelFactory(
@@ -85,7 +80,7 @@ class MainActivity : ComponentActivity() {
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun ScreenSetup(viewModel: MainViewModel){
+fun ScreenSetup(viewModel: LogViewModel){
 
     val navController = rememberNavController()
 
@@ -116,7 +111,7 @@ fun ScreenSetup(viewModel: MainViewModel){
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun NavigationHost(navController: NavHostController, viewModel: MainViewModel){
+fun NavigationHost(navController: NavHostController, viewModel: LogViewModel){
 
     // Define the allLogs to be used by the various screens
     val allLogs by viewModel.listedLogs.observeAsState(listOf())
@@ -126,7 +121,7 @@ fun NavigationHost(navController: NavHostController, viewModel: MainViewModel){
         startDestination = NavRoutes.Splash.route,
     ){
         composable(NavRoutes.Splash.route){
-            AnimatedSplashScreen(navController)
+            AnimatedSplashScreen(navController, viewModel)
         }
 
         composable(NavRoutes.Overview.route){
@@ -150,6 +145,6 @@ class MainViewModelFactory(val application: Application):
         ViewModelProvider.Factory{
             @RequiresApi(Build.VERSION_CODES.O)
             override fun <T : ViewModel> create (modelClass: Class<T>): T {
-                return MainViewModel(application) as T
+                return LogViewModel(application) as T
             }
         }

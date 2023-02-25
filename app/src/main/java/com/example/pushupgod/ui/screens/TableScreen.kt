@@ -16,9 +16,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.pushupgod.database.MainViewModel
+import com.example.pushupgod.database.LogViewModel
 import com.example.pushupgod.database.PushupLog
 import java.text.SimpleDateFormat
 import java.time.LocalDate
@@ -30,7 +29,7 @@ import java.util.*
 @Composable
 fun TableScreen(
     allLogs: List<PushupLog>,
-    viewModel: MainViewModel
+    viewModel: LogViewModel
 ){
     // All items placed inside of a column
     Column(
@@ -50,18 +49,10 @@ fun TableScreen(
 @RequiresApi(Build.VERSION_CODES.O)
 // TODO: Revamp this area to allow for daily, weekly, and monthly range selections
 @Composable
-fun DataRangeSelector(viewModel: MainViewModel){
-
-    // Get daily, weekly, monthly selected
-    var dailySelected = viewModel.dailySelected
-    var weeklySelected = viewModel.weeklySelected
-    var monthlySelected = viewModel.monthlySelected
+fun DataRangeSelector(viewModel: LogViewModel){
 
     // Date formatter for date strings
     val dateFormatter = DateTimeFormatter.ofPattern("MM/dd/YYYY")
-
-    // Get date information to be displayed in second row
-    var activeDate = viewModel.activeDay.format(dateFormatter).toString()
 
     val weekStart = SimpleDateFormat("MM/dd/yyyy", Locale.US).format(Date()).toString()
     val weekEnd = SimpleDateFormat("MM/dd/yyyy", Locale.US).format(Date()).toString()
@@ -75,15 +66,14 @@ fun DataRangeSelector(viewModel: MainViewModel){
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 15.dp),
+                .padding(vertical = 5.dp),
             horizontalArrangement = Arrangement.SpaceEvenly,
         ){
 
             // Back arrow to navigate backwards through time
             Button(
-                modifier = Modifier.padding(horizontal = 15.dp),
+                modifier = Modifier.padding(horizontal = 5.dp),
                 onClick = {
-                    viewModel.changeActiveDay(2)
                 }
             ){
                 Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Navigate backward in ~time")
@@ -91,17 +81,17 @@ fun DataRangeSelector(viewModel: MainViewModel){
 
             // Daily data button
             Button(
-                modifier = Modifier.padding(horizontal = 15.dp),
+                modifier = Modifier.padding(horizontal = 5.dp),
                 onClick = {
                     // Change the value of daily selected
-                    dailySelected = true
-                    weeklySelected = false
-                    monthlySelected = false
-                    viewModel.findLog(activeDate)
+                    viewModel.dailySelected = true
+                    viewModel.weeklySelected = false
+                    viewModel.monthlySelected = false
+                    viewModel.findLog(viewModel.activeDay.toString())
                 },
                 colors = ButtonDefaults.buttonColors(
-                    backgroundColor = if (dailySelected) Color.White else Color.Red,
-                    contentColor = if (dailySelected) Color.Red else Color.White,
+                    backgroundColor = if (viewModel.dailySelected) Color.White else Color.Red,
+                    contentColor = if (viewModel.dailySelected) Color.Red else Color.White,
                 )
             ){
                 Text("Daily")
@@ -109,16 +99,17 @@ fun DataRangeSelector(viewModel: MainViewModel){
 
             // Weekly data button
             Button(
+                modifier = Modifier.padding(horizontal = 5.dp),
                 onClick = {
                     // Change the value of daily selected
-                    dailySelected = false
-                    weeklySelected = true
-                    monthlySelected = false
-                    viewModel.findLog(activeDate)
+                    viewModel.dailySelected = false
+                    viewModel.weeklySelected = true
+                    viewModel.monthlySelected = false
+                    viewModel.findLog(viewModel.activeDay.toString())
                 },
                 colors = ButtonDefaults.buttonColors(
-                    backgroundColor = if (weeklySelected) Color.White else Color.Red,
-                    contentColor = if (weeklySelected) Color.Red else Color.White,
+                    backgroundColor = if (viewModel.weeklySelected) Color.White else Color.Red,
+                    contentColor = if (viewModel.weeklySelected) Color.Red else Color.White,
                 )
             ){
                 Text("Weekly")
@@ -126,16 +117,17 @@ fun DataRangeSelector(viewModel: MainViewModel){
 
             // Monthly data button
             Button(
+                modifier = Modifier.padding(horizontal = 5.dp),
                 onClick = {
                     // Change the value of daily selected
-                    dailySelected = false
-                    weeklySelected = false
-                    monthlySelected = true
-                    viewModel.findLog(activeDate)
+                    viewModel.dailySelected = false
+                    viewModel.weeklySelected = false
+                    viewModel.monthlySelected = true
+                    viewModel.findLog(viewModel.activeDay.toString())
                 },
                 colors = ButtonDefaults.buttonColors(
-                    backgroundColor = if (monthlySelected) Color.White else Color.Red,
-                    contentColor = if (monthlySelected) Color.Red else Color.White,
+                    backgroundColor = if (viewModel.monthlySelected) Color.White else Color.Red,
+                    contentColor = if (viewModel.monthlySelected) Color.Red else Color.White,
                 )
             ){
                 Text("Monthly")
@@ -143,9 +135,8 @@ fun DataRangeSelector(viewModel: MainViewModel){
 
             // Button to navigate forward through time
             Button(
-                modifier = Modifier.padding(horizontal = 15.dp),
+                modifier = Modifier.padding(horizontal = 5.dp),
                 onClick = {
-                    viewModel.changeActiveDay(1)
                 }
             ){
                 Icon(imageVector = Icons.Default.ArrowForward, contentDescription = "Navigate forward in ~time")
@@ -161,10 +152,12 @@ fun DataRangeSelector(viewModel: MainViewModel){
             Text(
                 modifier = Modifier.padding(vertical = 10.dp, horizontal = 10.dp),
                 text =
-                if(dailySelected){
+                if(viewModel.dailySelected) {
                     "Daily Entries | 01/31/23"
-                }else{
+                } else if(viewModel.weeklySelected){
                     "Weekly Entries | 01/22/23 - 01/29/23"
+                }else{
+                    "Monthly Entries | February"
                 },
                 style = TextStyle(
                     color = Color.White
@@ -177,30 +170,32 @@ fun DataRangeSelector(viewModel: MainViewModel){
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun DataTable(viewModel: MainViewModel){
-    // Variable to hold todays date
-    val todayDate = SimpleDateFormat("MM/dd/yyyy", Locale.US).format(Date()).toString()
-    // Get the list of logs from the viewModel
-    var listLogs = viewModel.listedLogs.value
+fun DataTable(viewModel: LogViewModel){
+
+    val listedLogs:List<PushupLog> = remember {
+        viewModel.listedLogs.value!!
+    }
 
     // Set the table head depending on where daily values button is selected
-    var TableHead1 = if(viewModel.dailySelected) "Time" else "Date"
+    var TableHead1 =
+        if(viewModel.dailySelected){
+            "Time"
+        } else if (viewModel.weeklySelected){
+            "Date"
+        }else{
+            "Date"
+        }
 
     TitleRow(head1 = TableHead1, head2 = "# Pushed")
 
-    if (listLogs != null) {
+    if (listedLogs != null) {
             // Lazy column will display all the of the entries
             LazyColumn(
                 Modifier
                     .fillMaxWidth()
-                    .padding(10.dp),
+                    .padding(5.dp),
             ) {
-                // First item is the Title Row followed by "items" which is based a list
-                item {
-                    TitleRow(head1 = TableHead1, head2 = "# Pushed")
-                }
-
-                items(listLogs) { log ->
+                items(listedLogs) { log ->
                     logRow(
                         key = if (viewModel.dailySelected) {
                             log.id.toString()
@@ -227,9 +222,9 @@ fun DataTable(viewModel: MainViewModel){
 fun TitleRow(head1: String, head2: String) {
     Row(
         modifier = Modifier
+            .padding(5.dp)
             .background(Color.Red)
             .fillMaxWidth()
-            .padding(5.dp)
     ) {
         Text(
             head1,
@@ -279,10 +274,4 @@ fun GetDateAndTime(date: String): String{
     val startOfWeek = TodaysDate.minus(Period.of(0,0,dayOfWeek - 1)).format(dateFormatter).toString()
     val endOfWeek = TodaysDate.plusDays((dayOfWeek - 7).toLong()).format(dateFormatter).toString()
     return "$startOfWeek to $endOfWeek"
-}
-
-@RequiresApi(Build.VERSION_CODES.O)
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview(){
 }

@@ -9,7 +9,7 @@ import com.example.pushupgod.PushupLogDao
 @Database(entities = [(PushupLog::class)], version = 1)
 abstract class PushupLogDatabase: RoomDatabase() {
 
-    abstract fun productDao(): PushupLogDao
+    abstract fun logDao(): PushupLogDao
 
     companion object {
 

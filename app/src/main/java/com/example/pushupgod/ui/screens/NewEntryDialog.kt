@@ -1,6 +1,8 @@
 package com.example.pushupgod.ui.screens
 
+import android.os.Build
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -16,17 +18,18 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import com.example.pushupgod.database.MainViewModel
+import com.example.pushupgod.database.LogViewModel
 import com.example.pushupgod.database.PushupLog
 import java.text.SimpleDateFormat
 import java.util.*
 
 // Primary composable called by MainActivity
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun NewEntryDialog(
     onDismiss: () -> Unit,
     onConfirm: () -> Unit,
-    viewModel: MainViewModel
+    viewModel: LogViewModel
 ){
     Dialog(
         onDismissRequest = {
@@ -52,8 +55,9 @@ fun NewEntryDialog(
 }
 
 // Composable which handles gathering and submission of data
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun dataEntry(viewModel: MainViewModel, onConfirm: Unit){
+fun dataEntry(viewModel: LogViewModel, onConfirm: Unit){
     val sdf = SimpleDateFormat("MM/dd/yyyy", Locale.US)
     val time: String = sdf.format(Date())
     var date by remember { mutableStateOf(sdf.format(Date()).toString()) }

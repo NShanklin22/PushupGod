@@ -17,12 +17,14 @@ import java.time.format.DateTimeFormatter
 import java.util.*
 
 @RequiresApi(Build.VERSION_CODES.O)
-class MainViewModel(application: Application) : ViewModel() {
-
+class LogViewModel(application: Application) : ViewModel() {
     // repository is an instance of class LogRepository in system tree, hold methods for accessing data
-    private val repository: LogRepository
+    val logDb = PushupLogDatabase.getInstance(application)
+    val logDao = logDb.logDao()
+    val repository = LogRepository(logDao)
 
-    // Variables that determine what range of data is being displayed
+    val listedLogs by mutableStateOf(repository.listedLogs)
+
     // Show entries from today
     var dailySelected by mutableStateOf(true)
     // Show entries from this week
@@ -34,22 +36,14 @@ class MainViewModel(application: Application) : ViewModel() {
     var NewEntrySelected by mutableStateOf(false)
 
     // Variable to store the active week
-    val dateFormatter = DateTimeFormatter.ofPattern("MM/dd/yy")
+    val dateFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy")
     val TodaysDate = LocalDate.now()
     var activeDay by mutableStateOf(TodaysDate)
     var activeWeek by mutableStateOf(1)
     var activeMonth by mutableStateOf(1)
 
-    // listed logs are what are displayed on the main
-    lateinit var listedLogs : MutableLiveData<List<PushupLog>>
-
-    // Variable to store the active day
-
-    init {
-        val logDb = PushupLogDatabase.getInstance(application)
-        val logDao = logDb.productDao()
-        repository = LogRepository(logDao)
-        listedLogs = repository.listedLogs
+    init{
+        repository.findLog(LocalDate.now().format(DateTimeFormatter.ofPattern("MM/dd/yyyy")))
     }
 
     fun insertlog(pushupLog: PushupLog) {
@@ -60,39 +54,11 @@ class MainViewModel(application: Application) : ViewModel() {
         repository.findLog(SelectedDateRange)
     }
 
-    fun deleteLog(name: String) {
-        repository.deleteLog(name)
-    }
-
-    fun sortLogs() {
-        repository.sortLogs()
-    }
-
-    // Function with Increment/Decrement the active day (for daily view)
-    fun changeActiveDay(direction: Int){
-        if(direction == 1){
-            activeDay = activeDay.plusDays(1)
-        }else{
-            activeDay = activeDay.minusDays(1)
-        }
-    }
-
-    // Function with Increment/Decrement the active week (for weekly view)
-    fun changeActiveWeek(direction: Int){
-        if(direction == 1){
-
-        }else{
-
-        }
-    }
-
-    // Function with Increment/Decrement the active month (for monthly view)
-    fun changeActiveMonth(direction: Int){
-        if(direction == 1){
-
-        }else{
-
-        }
-    }
-
+//    fun deleteLog(name: String) {
+//        repository.deleteLog(name)
+//    }
+//
+//    fun sortLogs() {
+//        repository.sortLogs()
+//    }
 }
